@@ -1,19 +1,32 @@
 package kmitl.lab03.natcha58070069.simplemydot;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import kmitl.lab03.natcha58070069.simplemydot.model.Dot;
 import kmitl.lab03.natcha58070069.simplemydot.view.DotView;
 
+import static android.R.attr.centerX;
+import static android.R.attr.centerY;
+import static android.R.attr.clickable;
+import static android.R.attr.contextClickable;
+import static android.R.attr.touchscreenBlocksFocus;
+
 public class MainActivity extends AppCompatActivity implements Dot.onDotChangedListener{
 
     private Dot dot;
     private DotView dotView;
+    private ArrayList<Dot> allDot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,32 +34,75 @@ public class MainActivity extends AppCompatActivity implements Dot.onDotChangedL
         setContentView(R.layout.activity_main);
 
         dotView = (DotView) findViewById(R.id.dotView);
-        dot = new Dot(this, 0, 0, 30);
+        dot = new Dot(this, 0, 0, 30); //default value start
+        allDot = new ArrayList<>();
     }
 
+    //Click on Random Butt
     public void onRandomDot(View view) {
-        //Random a Dot
         Random random = new Random();
-//        int centerX = random.nextInt(500);
-//        int centerY = random.nextInt(500);
+        //Random locate
         int centerX = random.nextInt(this.dotView.getWidth());
         int centerY = random.nextInt(this.dotView.getHeight());
+        createDot(centerX, centerY);
+    }
+
+    //Touch for create dot
+    @Override
+    public boolean onTouchEvent(MotionEvent e){
+        float eventX = e.getX();
+        float eventY = e.getY()-200;
+
+        switch (e.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                createDot(eventX, eventY);
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                createDot(eventX, eventY);
+                break;
+            case MotionEvent.ACTION_UP:
+
+                break;
+            default:
+                return false;
+        }
+        invalidateOptionsMenu();
+        return true;
+
+    }
+
+    //Create dot & add to ArrayList(allDot)
+    public void createDot(float centerX, float centerY){
+        Random random = new Random();
+
+        //Random Color
+        int red = random.nextInt(256);
+        int green = random.nextInt(256);
+        int blue = random.nextInt(256);
+
+        //Random Radius
+        int radius = (int) (30+(Math.random()*200));
+
+        //Create dot for add into allDot
+        dot = new Dot(this,centerX,centerY,radius);
+
         //this have interface
-        //new Dot(this, centerX, centerY, 50);
         this.dot.setCenterX(centerX);
         this.dot.setCenterY(centerY);
+        this.dot.setRadius(radius);
+        this.dot.setColor(red, green, blue);
+
+        allDot.add(dot);
     }
 
     @Override
     public void onDotChanged(Dot dot) {
-        //receive call back and view
-        //Draw dot model to view
-//        TextView centerXTextView = (TextView)findViewById(R.id.centerXTextView);
-//        TextView centerYTextView = (TextView)findViewById(R.id.centerYTextView);
-//
-//        centerXTextView.setText(String.valueOf(dot.getCenterX()));
-//        centerYTextView.setText(String.valueOf(dot.getCenterY()));
-        dotView.setDot(dot); //create meth setDot bec setDot เรื่อย ๆ
+        dotView.setAllDot(allDot); //create meth setDot bec setDot เรื่อย ๆ
+        dotView.invalidate();
+    }
+
+    public void onClearDot(View view) {
+        allDot.clear();
         dotView.invalidate();
     }
 }
