@@ -1,19 +1,24 @@
 package kmitl.lab03.natcha58070069.simplemydot;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Parcelable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import kmitl.lab03.natcha58070069.simplemydot.model.Dot;
+import kmitl.lab03.natcha58070069.simplemydot.model.DotParcelable;
+import kmitl.lab03.natcha58070069.simplemydot.model.DotSerializable;
 import kmitl.lab03.natcha58070069.simplemydot.view.DotView;
 
 import static android.R.attr.centerX;
@@ -33,9 +38,34 @@ public class MainActivity extends AppCompatActivity implements Dot.onDotChangedL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final DotSerializable dotSerializable = new DotSerializable();
+        dotSerializable.setCenterX(150);
+        dotSerializable.setCenterY(150);
+        dotSerializable.setColor(Color.RED);
+        dotSerializable.setRadius(30);
+
+        final DotParcelable dotParcelable = new DotParcelable(150, 150, 50);
+
+
         dotView = (DotView) findViewById(R.id.dotView);
         dot = new Dot(this, 0, 0, 30); //default value start
         allDot = new ArrayList<>();
+
+        //building
+        Button btnOpenActivity = (Button) findViewById(R.id.btnOpenActivity);
+        btnOpenActivity.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent  = new Intent(MainActivity.this, secondActivity.class);
+                //put sth เข้า intent
+                intent.putExtra("xValue", 30);
+                //put dotSerializable in intent
+                intent.putExtra("dotSerializable", dotSerializable);
+
+                //put dotparcelable in intent
+                intent.putExtra("dotParcelable", dotParcelable);
+                startActivity(intent);
+            }
+        });
     }
 
     //Click on Random Butt
