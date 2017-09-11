@@ -1,138 +1,177 @@
 package kmitl.lab03.natcha58070069.simplemydot;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
+import android.provider.CalendarContract;
+import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.xml.transform.URIResolver;
+
+import kmitl.lab03.natcha58070069.simplemydot.model.Colors;
 import kmitl.lab03.natcha58070069.simplemydot.model.Dot;
 import kmitl.lab03.natcha58070069.simplemydot.model.DotParcelable;
 import kmitl.lab03.natcha58070069.simplemydot.model.DotSerializable;
+import kmitl.lab03.natcha58070069.simplemydot.model.Dots;
 import kmitl.lab03.natcha58070069.simplemydot.view.DotView;
+import kmitl.lab03.natcha58070069.simplemydot.view.Screenshot;
 
 import static android.R.attr.centerX;
 import static android.R.attr.centerY;
 import static android.R.attr.clickable;
 import static android.R.attr.contextClickable;
+import static android.R.attr.contextUri;
+import static android.R.attr.radius;
 import static android.R.attr.touchscreenBlocksFocus;
 
-public class MainActivity extends AppCompatActivity implements Dot.onDotChangedListener{
+public class MainActivity extends AppCompatActivity implements Dots.OnDotsChangeListener,DotView.OnDotViewPressListener {
 
-    private Dot dot;
+    private Dots dots;
     private DotView dotView;
-    private ArrayList<Dot> allDot;
+    private View main;
+    private ImageView imageView;
+    private String currentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        main = findViewById(R.id.dotView);
+        imageView = (ImageView) findViewById(R.id.imageView);
+        Button btn = (Button) findViewById(R.id.btnCapture);
+
+        btn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                Bitmap b = Screenshot.takescreenshotOfRootView(imageView);
+                imageView.setImageBitmap(b);
+                main.setBackgroundColor(Color.parseColor("#999999"));
+
+                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                File imageFile = new File(path, getCurrentTime()+ ".png");
+                try {
+                    FileOutputStream fileOutPutStream = new FileOutputStream(imageFile);
+                    b.compress(Bitmap.CompressFormat.PNG, 80, fileOutPutStream);
+
+                    fileOutPutStream.flush();
+                    fileOutPutStream.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Uri.parse("file://" + imageFile.getAbsolutePath());
+
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.setType("image/*");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(path, getCurrentTime()+ ".png")));
+
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(shareIntent, "send"));
+
+//                Intent openInChooser = new Intent(shareIntent);
+//                openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, b);
+//                startActivity(openInChooser);
+
+//                Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                photoPickerIntent.setType("image/*");
+//                startActivityForResult(photoPickerIntent,2);
+            }
+        });
+
+        //SERIALIZABLE
         final DotSerializable dotSerializable = new DotSerializable();
         dotSerializable.setCenterX(150);
         dotSerializable.setCenterY(150);
         dotSerializable.setColor(Color.RED);
         dotSerializable.setRadius(30);
 
+        //PARCELABLE
         final DotParcelable dotParcelable = new DotParcelable(150, 150, 50);
-
-
-        dotView = (DotView) findViewById(R.id.dotView);
-        dot = new Dot(this, 0, 0, 30); //default value start
-        allDot = new ArrayList<>();
 
         //building
         Button btnOpenActivity = (Button) findViewById(R.id.btnOpenActivity);
         btnOpenActivity.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent  = new Intent(MainActivity.this, secondActivity.class);
-                //put sth เข้า intent
+                //put sth into intent
                 intent.putExtra("xValue", 30);
                 //put dotSerializable in intent
                 intent.putExtra("dotSerializable", dotSerializable);
-
                 //put dotparcelable in intent
                 intent.putExtra("dotParcelable", dotParcelable);
                 startActivity(intent);
             }
         });
+
+        dotView = (DotView) findViewById(R.id.dotView);
+        dotView.setOnDotViewPressListener(this);
+        dots = new Dots();
+        dots.setListener(this);
     }
 
-    //Click on Random Butt
     public void onRandomDot(View view) {
         Random random = new Random();
         //Random locate
-        int centerX = random.nextInt(this.dotView.getWidth());
-        int centerY = random.nextInt(this.dotView.getHeight());
-        createDot(centerX, centerY);
-    }
-
-    //Touch for create dot
-    @Override
-    public boolean onTouchEvent(MotionEvent e){
-        float eventX = e.getX();
-        float eventY = e.getY()-200;
-
-        switch (e.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                createDot(eventX, eventY);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                createDot(eventX, eventY);
-                break;
-            case MotionEvent.ACTION_UP:
-
-                break;
-            default:
-                return false;
-        }
-        invalidateOptionsMenu();
-        return true;
-
-    }
-
-    //Create dot & add to ArrayList(allDot)
-    public void createDot(float centerX, float centerY){
-        Random random = new Random();
-
-        //Random Color
-        int red = random.nextInt(256);
-        int green = random.nextInt(256);
-        int blue = random.nextInt(256);
-
-        //Random Radius
+        int centerX = random.nextInt(dotView.getWidth());
+        int centerY = random.nextInt(dotView.getHeight());
         int radius = (int) (30+(Math.random()*200));
-
-        //Create dot for add into allDot
-        dot = new Dot(this,centerX,centerY,radius);
-
-        //this have interface
-        this.dot.setCenterX(centerX);
-        this.dot.setCenterY(centerY);
-        this.dot.setRadius(radius);
-        this.dot.setColor(red, green, blue);
-
-        allDot.add(dot);
+        Dot newDot = new Dot(centerX, centerY, radius, new Colors().getColor());
+        dots.addDot(newDot);
     }
 
-    @Override
-    public void onDotChanged(Dot dot) {
-        dotView.setAllDot(allDot); //create meth setDot bec setDot เรื่อย ๆ
+    public void onDotViewPressed(int x, int y){
+        int dotPosition = dots.findDot(x, y);
+        int radius = (int) (30+(Math.random()*200));
+        if(dotPosition == -1){
+            Dot newDot = new Dot(x, y, radius, new Colors().getColor());
+            dots.addDot(newDot);
+        } else {
+            dots.removeBy(dotPosition);
+        }
+    }
+
+    public void onDotsChanged(Dots dots) {
+        dotView.setDots(dots); //create meth setDot bec setDot เรื่อย ๆ
         dotView.invalidate();
     }
 
     public void onClearDot(View view) {
-        allDot.clear();
+        dots.clearAll();
         dotView.invalidate();
+    }
+
+    public String getCurrentTime() {
+        
+        return currentTime;
     }
 }

@@ -1,46 +1,22 @@
 package kmitl.lab03.natcha58070069.simplemydot.model;
 
+import android.graphics.Color;
+
 public class Dot {
     private float centerX;
     private float centerY;
-    private float radius;
-    private int red, green, blue;
+    private int radius;
+    private int color;
 
-    //Give info from main act
-    private onDotChangedListener listener;
-
-    public void setListener(onDotChangedListener listener) {
-        this.listener = listener;
+    public Dot(float centerX, float centerY, int radius) {
+        this(centerX, centerY, radius, Color.RED);
     }
 
-    public interface onDotChangedListener {
-        void onDotChanged(Dot dot);
-    }
-
-    public Dot(onDotChangedListener listener,float centerX, float centerY, float radius) {
+    public Dot(float centerX, float centerY, int radius, int color) {
         this.centerX = centerX;
         this.centerY = centerY;
         this.radius = radius;
-        this.listener = listener;
-    }
-
-    public int getRed() {
-        return red;
-    }
-
-    public int getGreen() {
-        return green;
-    }
-
-    public int getBlue() {
-        return blue;
-    }
-
-    public void setColor(int red, int green, int blue) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-        this.listener.onDotChanged(this);
+        this.color = color;
     }
 
     public float getCenterX() {
@@ -49,19 +25,29 @@ public class Dot {
 
     public void setCenterX(float centerX) {
         this.centerX = centerX;
-        this.listener.onDotChanged(this);
     }
 
-    public float getCenterY() {return centerY;}
+    public float getCenterY() {
+        return centerY;
+    }
 
     public void setCenterY(float centerY) {
         this.centerY = centerY;
-        this.listener.onDotChanged(this);
     }
 
-    public int getRadius() {
-        return (int) radius;
+    public float getRadius() {
+        return radius;
     }
 
-    public void setRadius(int radius) { this.radius = radius;}
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

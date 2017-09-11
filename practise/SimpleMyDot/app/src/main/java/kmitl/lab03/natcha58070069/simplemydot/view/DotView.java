@@ -8,53 +8,32 @@ import android.provider.CalendarContract;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import kmitl.lab03.natcha58070069.simplemydot.MainActivity;
-import kmitl.lab03.natcha58070069.simplemydot.model.Colors;
 import kmitl.lab03.natcha58070069.simplemydot.model.Dot;
-import kmitl.lab03.natcha58070069.simplemydot.model.Dots;
 
 public class DotView extends View {
 
     private Paint paint;
-    private Dots allDot;
+    private Dot dot;
+    private ArrayList<Dot> allDot;
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         if (this.allDot != null) {
-            for(Dot dot : allDot.getAllDot()){
-                paint.setColor(dot.getColor());
-                canvas.drawCircle(dot.getCenterX(), dot.getCenterY(), dot.getRadius(), paint);
+            for(Dot dot : allDot){
+                if (dot != null) {
+                    paint.setColor(Color.rgb(dot.getRed(), dot.getGreen(), dot.getBlue()));
+                    canvas.drawCircle(dot.getCenterX(), dot.getCenterY(), dot.getRadius(), paint);
+                }
             }
         }
     }
-
-    public interface OnDotViewPressListener{
-        void onDotViewPressed(int x, int y);
-    }
-
-    private OnDotViewPressListener onDotViewPressListener;
-
-    public void setOnDotViewPressListener(OnDotViewPressListener onDotViewPressListener) {
-        this.onDotViewPressListener = onDotViewPressListener;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent e){
-        switch (e.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                this.onDotViewPressListener.onDotViewPressed((int)e.getX(), (int)e.getY());
-                return true;
-        }
-        return false;
-    }
-
     public DotView(Context context) {
         super(context);
         paint = new Paint();
@@ -71,8 +50,12 @@ public class DotView extends View {
     }
 
 
-    public void setDots(Dots dots) {
-        this.allDot = dots;
+    public void setDot(Dot dot) {
+        this.dot = dot;
+    }
+
+    public void setAllDot(ArrayList<Dot> allDot){
+        this.allDot = allDot;
     }
 
 }
