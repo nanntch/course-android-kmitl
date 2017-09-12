@@ -3,10 +3,14 @@ package kmitl.lab03.natcha58070069.simplemydot;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import java.io.File;
@@ -50,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
     private View main;
     private ImageView imageView;
     private String currentTime;
-    private MenuItem item;
+    private final int EXTERNAL_REQUEST_CODE = 2;
 
 
     @Override
@@ -65,46 +70,17 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
         btn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Bitmap b = Screenshot.takescreenshotOfRootView(imageView);
-                imageView.setImageBitmap(b);
-                main.setBackgroundColor(Color.parseColor("#999999"));
-
-                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                File imageFile = new File(path, getCurrentTime()+ ".png");
-                try {
-                    FileOutputStream fileOutPutStream = new FileOutputStream(imageFile);
-                    b.compress(Bitmap.CompressFormat.PNG, 80, fileOutPutStream);
-
-                    fileOutPutStream.flush();
-                    fileOutPutStream.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Uri uri = Uri.parse("file://" + imageFile.getAbsolutePath());
-
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.setType("image/*");
-//                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(path, getCurrentTime()+ ".png")));
-
-                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-
-
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(shareIntent, "send"));
-
-
-//                Intent openInChooser = new Intent(shareIntent);
-//                openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, b);
-//                startActivity(openInChooser);
-
-//                Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-//                photoPickerIntent.setType("image/*");
-//                startActivityForResult(photoPickerIntent,2);
+                //CREATE FILE FOR SAVE PICTURE(SCREENSHOT)
+                createFile(b);
+                //URI
+                Uri uri = Uri.parse("file://" + createFile(b).getAbsolutePath());
+                //CREATE INTENT
+                createIntent(uri);
             }
         });
+
+        //ARK PERMISSION
+        askPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_REQUEST_CODE);
 
         //SERIALIZABLE
         final DotSerializable dotSerializable = new DotSerializable();
@@ -137,6 +113,58 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
         dots.setListener(this);
     }
 
+    private void createIntent(Uri uri){
+        //INTENT TO APP
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(shareIntent, "send"));
+    }
+
+    private File createFile(Bitmap b){
+        //CREATE FILE FOR SAVE PICTURE(SCREENSHOT)
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File imageFile = new File(path, getCurrentTime()+ ".png");
+        try {
+            FileOutputStream fileOutPutStream = new FileOutputStream(imageFile);
+            //COMPRESS BITMAP
+            b.compress(Bitmap.CompressFormat.PNG, 80, fileOutPutStream);
+
+            fileOutPutStream.flush();
+            fileOutPutStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageFile;
+    }
+
+    private void askPermission(String permission, int requestCode){
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+            //dont have permission
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+        }
+        else {
+            //have permission
+            Toast.makeText(this, "Permission is Already Granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission,
+                                           @NonNull int[] grantResaults){
+        switch (requestCode){
+            case EXTERNAL_REQUEST_CODE:
+                if (grantResaults.length>0&&grantResaults[0]==PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, "External Permission Granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "External Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
     public void onRandomDot(View view) {
         Random random = new Random();
         //Random locate
@@ -154,28 +182,7 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
             Dot newDot = new Dot(x, y, radius, new Colors().getColor());
             dots.addDot(newDot);
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setItems(new CharSequence[]{"Size", "Color", "Remove"},
-                    new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case 0:
-                            dots.changeSize(dotPosition, radius);
-                            dialog.dismiss();
-                            break;
-                        case 1:
-                            dots.changeColor(dotPosition);
-                            dialog.dismiss();
-                            break;
-                        case 2:
-                            dots.removeBy(dotPosition);
-                            dialog.dismiss();
-                            break;
-                    }
-                }
-            });
-            builder.show();
+            dots.editDot(this, dotPosition, radius);
         }
     }
 

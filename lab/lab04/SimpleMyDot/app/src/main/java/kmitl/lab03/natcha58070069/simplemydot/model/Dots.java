@@ -1,6 +1,9 @@
 package kmitl.lab03.natcha58070069.simplemydot.model;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,5 +69,30 @@ public class Dots {
     public void changeColor(int position){
         allDot.get(position).setColor(new Colors().getColor());
         this.listener.onDotsChanged(this);
+    }
+
+    public void editDot(Context context, final int position, final int radius){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setItems(new CharSequence[]{"Size", "Color", "Remove"},
+                new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                changeSize(position, radius);
+                                dialog.dismiss();
+                                break;
+                            case 1:
+                                changeColor(position);
+                                dialog.dismiss();
+                                break;
+                            case 2:
+                                removeBy(position);
+                                dialog.dismiss();
+                                break;
+                        }
+                    }
+                });
+        builder.show();
     }
 }

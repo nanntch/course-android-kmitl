@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kmitl.lab03.natcha58070069.simplemydot">
-
-    <!--<uses-permission android:name="android.permission.INTERNET"/>-->
-    <!--<provider android:authorities="com.facebook.app.FacebookContentProvider1234"-->
-        <!--android:name="com.facebook.FacebookContentProvider"-->
-        <!--android:exported="true" />-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
