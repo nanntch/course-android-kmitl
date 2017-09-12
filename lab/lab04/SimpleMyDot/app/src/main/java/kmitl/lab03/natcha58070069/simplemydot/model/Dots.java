@@ -1,5 +1,7 @@
 package kmitl.lab03.natcha58070069.simplemydot.model;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
  */
 
 public class Dots {
+
 
     //INTERFACE & LISTENER
     public interface OnDotsChangeListener {
@@ -52,6 +55,16 @@ public class Dots {
 
     public void removeBy(int position) {
         allDot.remove(position);
+        this.listener.onDotsChanged(this);
+    }
+
+    public void changeSize(int position, int radius){
+        allDot.get(position).setRadius(radius);
+        this.listener.onDotsChanged(this);
+    }
+
+    public void changeColor(int position){
+        allDot.get(position).setColor(new Colors().getColor());
         this.listener.onDotsChanged(this);
     }
 }

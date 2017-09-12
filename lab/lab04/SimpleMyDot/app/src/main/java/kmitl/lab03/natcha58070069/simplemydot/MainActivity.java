@@ -1,36 +1,27 @@
 package kmitl.lab03.natcha58070069.simplemydot;
 
-import android.content.ContentResolver;
-import android.content.Context;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Parcelable;
-import android.provider.CalendarContract;
-import android.provider.MediaStore;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.xml.transform.URIResolver;
@@ -51,13 +42,16 @@ import static android.R.attr.contextUri;
 import static android.R.attr.radius;
 import static android.R.attr.touchscreenBlocksFocus;
 
-public class MainActivity extends AppCompatActivity implements Dots.OnDotsChangeListener,DotView.OnDotViewPressListener {
+public class MainActivity extends AppCompatActivity implements Dots.OnDotsChangeListener,
+        DotView.OnDotViewPressListener {
 
     private Dots dots;
     private DotView dotView;
     private View main;
     private ImageView imageView;
     private String currentTime;
+    private MenuItem item;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +82,19 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
                     e.printStackTrace();
                 }
 
-                Uri.parse("file://" + imageFile.getAbsolutePath());
+                Uri uri = Uri.parse("file://" + imageFile.getAbsolutePath());
 
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.setType("image/*");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(path, getCurrentTime()+ ".png")));
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(path, getCurrentTime()+ ".png")));
+
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+
 
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(shareIntent, "send"));
+
 
 //                Intent openInChooser = new Intent(shareIntent);
 //                openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, b);
@@ -150,13 +148,34 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
     }
 
     public void onDotViewPressed(int x, int y){
-        int dotPosition = dots.findDot(x, y);
-        int radius = (int) (30+(Math.random()*200));
+        final int dotPosition = dots.findDot(x, y);
+        final int radius = (int) (30+(Math.random()*200));
         if(dotPosition == -1){
             Dot newDot = new Dot(x, y, radius, new Colors().getColor());
             dots.addDot(newDot);
         } else {
-            dots.removeBy(dotPosition);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setItems(new CharSequence[]{"Size", "Color", "Remove"},
+                    new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case 0:
+                            dots.changeSize(dotPosition, radius);
+                            dialog.dismiss();
+                            break;
+                        case 1:
+                            dots.changeColor(dotPosition);
+                            dialog.dismiss();
+                            break;
+                        case 2:
+                            dots.removeBy(dotPosition);
+                            dialog.dismiss();
+                            break;
+                    }
+                }
+            });
+            builder.show();
         }
     }
 
@@ -171,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
     }
 
     public String getCurrentTime() {
-        
         return currentTime;
     }
 }
