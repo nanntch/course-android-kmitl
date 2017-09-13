@@ -1,11 +1,13 @@
 package kmitl.lab03.natcha58070069.simplemydot;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -53,30 +56,19 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
         //ARK PERMISSION
         if (askPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_REQUEST_CODE) == 0){
             Bitmap b = Screenshot.takescreenshotOfRootView(imageView);
-            //URI
-            Uri uri = Uri.parse("file://" + createFile(b).getAbsolutePath());
+            Uri uri = createFile(this,b);
             //CREATE INTENT
             createIntent(uri);
         }
     }
 
     //CREATE FILE FOR SAVE PICTURE(SCREENSHOT)
-    private File createFile(Bitmap b){
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File imageFile = new File(path, getCurrentTime()+ ".png");
-        try {
-            FileOutputStream fileOutPutStream = new FileOutputStream(imageFile);
+    private Uri createFile(Context context, Bitmap b){
+            ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
             //COMPRESS BITMAP
-            b.compress(Bitmap.CompressFormat.PNG, 80, fileOutPutStream);
-
-            fileOutPutStream.flush();
-            fileOutPutStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return imageFile;
+            b.compress(Bitmap.CompressFormat.PNG, 80, byteArray);
+            String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), b,"screenshot_pic", null);
+        return Uri.parse(path);
     }
 
     //INTENT TO APP
@@ -119,14 +111,14 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
         //Random locate
         int centerX = random.nextInt(dotView.getWidth());
         int centerY = random.nextInt(dotView.getHeight());
-        int radius = (int) (30+(Math.random()*200));
+        int radius = (int) (30+(Math.random()*150));
         Dot newDot = new Dot(centerX, centerY, radius, new Colors().getColor());
         dots.addDot(newDot);
     }
 
     public void onDotViewPressed(int x, int y){
         final int dotPosition = dots.findDot(x, y);
-        final int radius = (int) (30+(Math.random()*200));
+        final int radius = (int) (30+(Math.random()*150));
         if(dotPosition == -1){
             Dot newDot = new Dot(x, y, radius, new Colors().getColor());
             dots.addDot(newDot);
