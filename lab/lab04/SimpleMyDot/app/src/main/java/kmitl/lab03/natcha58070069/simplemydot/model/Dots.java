@@ -56,6 +56,13 @@ public class Dots {
         return -1;
     }
 
+    public void undoDot(){
+        if(allDot.size()>0){
+            allDot.remove(allDot.size()-1);
+            this.listener.onDotsChanged(this);
+        }
+    }
+
     public void removeBy(int position) {
         allDot.remove(position);
         this.listener.onDotsChanged(this);
