@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
     private String currentTime;
     private final int EXTERNAL_REQUEST_CODE = 2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
 
     public void btnCapture(View view){
         //ARK PERMISSION
-        if (askPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_REQUEST_CODE)){
+        if (askPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_REQUEST_CODE) == 0){
             Bitmap b = Screenshot.takescreenshotOfRootView(imageView);
             //URI
             Uri uri = Uri.parse("file://" + createFile(b).getAbsolutePath());
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
             createIntent(uri);
         }
     }
+
     //CREATE FILE FOR SAVE PICTURE(SCREENSHOT)
     private File createFile(Bitmap b){
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
         return imageFile;
     }
 
+    //INTENT TO APP
     private void createIntent(Uri uri){
-        //INTENT TO APP
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
@@ -88,16 +88,16 @@ public class MainActivity extends AppCompatActivity implements Dots.OnDotsChange
         startActivity(Intent.createChooser(shareIntent, "Share image"));
     }
 
-    private boolean askPermission(String permission, int requestCode){
+    private int askPermission(String permission, int requestCode){
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
             //dont have permission
             ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-            return false;
+            return 1;
         }
         else {
             //have permission
             Toast.makeText(this, "Permission is Already Granted", Toast.LENGTH_SHORT).show();
-            return true;
+            return 0;
         }
     }
 
