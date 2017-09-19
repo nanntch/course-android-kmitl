@@ -1,15 +1,14 @@
 package kmitl.lab03.natcha58070069.simplemydot.model;
 
-
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import kmitl.lab03.natcha58070069.simplemydot.fragment.DotFragment;
-import kmitl.lab03.natcha58070069.simplemydot.view.DotView;
+import kmitl.lab03.natcha58070069.simplemydot.MainFragment;
 
 /**
  * Created by Nacha on 10-Sep-17.
@@ -25,7 +24,7 @@ public class Dots {
 
     private OnDotsChangeListener listener;
 
-    public void setListener(OnDotsChangeListener listener) {
+    public void setListener(OnDotsChangeListener listener){
         this.listener = listener;
     }
 
@@ -36,32 +35,32 @@ public class Dots {
         return allDot;
     }
 
-    public void addDot(Dot dot) {
+    public void addDot(Dot dot){
         this.allDot.add(dot);
         this.listener.onDotsChanged(this);
     }
 
-    public void clearAll() {
+    public void clearAll(){
         allDot.clear();
         this.listener.onDotsChanged(this);
     }
 
-    public int findDot(int x, int y) {
-        for (int i = 0; i < allDot.size(); i++) {
+    public int findDot(int x, int y){
+        for (int i=0; i<allDot.size(); i++){
             int centerX = (int) allDot.get(i).getCenterX();
             int centerY = (int) allDot.get(i).getCenterY();
             double distance = Math.sqrt(Math.pow(centerX - x, 2)) +
                     Math.sqrt(Math.pow(centerY - y, 2));
-            if (distance <= 100) {
+            if (distance <= 100){
                 return i;
             }
         }
         return -1;
     }
 
-    public void undoDot() {
-        if (allDot.size() > 0) {
-            allDot.remove(allDot.size() - 1);
+    public void undoDot(){
+        if(allDot.size()>0){
+            allDot.remove(allDot.size()-1);
             this.listener.onDotsChanged(this);
         }
     }
@@ -71,23 +70,23 @@ public class Dots {
         this.listener.onDotsChanged(this);
     }
 
-    public void changeSize(int position, int radius) {
+    public void changeSize(int position, int radius){
         allDot.get(position).setRadius(radius);
         this.listener.onDotsChanged(this);
     }
 
-    public void changeColor(int position) {
+    public void changeColor(int position){
         allDot.get(position).setColor(new Colors().getColor());
         this.listener.onDotsChanged(this);
     }
 
-    public void editDot(DotFragment dotFragment, final int position, final int radius) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(dotFragment.getActivity());
+    public void editDot(MainFragment context, final int position, final int radius){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context.getContext());
         builder.setItems(new CharSequence[]{"Size", "Color", "Remove"},
-                new DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
+                        switch (which){
                             case 0:
                                 changeSize(position, radius);
                                 dialog.dismiss();

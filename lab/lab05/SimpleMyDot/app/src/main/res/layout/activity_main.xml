@@ -1,114 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="kmitl.lab03.natcha58070069.simplemydot.MainActivity">
+    tools:context="kmitl.lab03.natcha58070069.simplemydot.MainActivity"
+    android:orientation="vertical">
 
-    <kmitl.lab03.natcha58070069.simplemydot.view.DotView
-        android:id="@+id/dotView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="5dp"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="3dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0" />
+   <fragment
+       android:id="@+id/fragmentContainer"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:name="kmitl.lab03.natcha58070069.simplemydot.fragment.DotFragment"
+       tools:layout="@layout/fragment_dot" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:background="#0066FF"
-        android:onClick="onRandomDot"
-        android:text="@string/random_dot"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="110dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="17dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="3dp"
-        android:background="#00CCFF"
-        android:onClick="onClearDot"
-        android:text="@string/clearDot"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/btnUndo"
-        app:layout_constraintRight_toRightOf="@+id/dotView"
-        app:layout_constraintTop_toBottomOf="@+id/dotView"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
 
-    <Button
-        android:id="@+id/btnCapture"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="16dp"
-        android:background="#00FFFF"
-        android:onClick="btnCapture"
-        android:text="@string/share"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_below="@id/btnCapture"
-        android:layout_width="0dp"
-        android:layout_height="495dp"
-        android:layout_centerHorizontal="true"
-        android:scaleType="fitCenter"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginTop="3dp"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/dotView" />
-
-    <Button
-        android:id="@+id/btnUndo"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="3dp"
-        android:background="#0099FF"
-        android:onClick="btnUndo"
-        android:text="Undo"
-        app:layout_constraintLeft_toRightOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/dotView"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

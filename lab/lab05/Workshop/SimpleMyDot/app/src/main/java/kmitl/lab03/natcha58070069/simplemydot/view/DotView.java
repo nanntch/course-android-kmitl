@@ -2,25 +2,30 @@ package kmitl.lab03.natcha58070069.simplemydot.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.provider.CalendarContract;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import kmitl.lab03.natcha58070069.simplemydot.fragment.DotFragment;
-import kmitl.lab03.natcha58070069.simplemydot.fragment.EditDotFragment;
+import java.util.ArrayList;
+import java.util.Random;
+
+import kmitl.lab03.natcha58070069.simplemydot.MainActivity;
+import kmitl.lab03.natcha58070069.simplemydot.model.Colors;
 import kmitl.lab03.natcha58070069.simplemydot.model.Dot;
 import kmitl.lab03.natcha58070069.simplemydot.model.Dots;
 
-public class DotView extends View{
+public class DotView extends View {
 
-//    implement GestureDetector.OnGestureListener
     private Paint paint;
     private Dots allDot;
-    private Dots dots;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -33,38 +38,6 @@ public class DotView extends View{
         }
     }
 
-    //GESTURE DETECTOR
-//    @Override
-//    public boolean onDown(MotionEvent e) {
-//        return false;
-//    }
-//
-//    @Override
-//    public void onShowPress(MotionEvent e) {
-//
-//    }
-//
-//    @Override
-//    public boolean onSingleTapUp(MotionEvent e) {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-//        return false;
-//    }
-//
-//    @Override
-//    public void onLongPress(MotionEvent e) {
-//
-//    }
-//
-//    @Override
-//    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//        return false;
-//    }
-    // END GESTURE DETECTOR
-
     public interface OnDotViewPressListener{
         void onDotViewPressed(int x, int y);
     }
@@ -75,24 +48,51 @@ public class DotView extends View{
         this.onDotViewPressListener = onDotViewPressListener;
     }
 
+//    private OnLongClickListener onLongClickListener;
+//
+//    public void setOnLongClickListener(OnLongClickListener onLongClickListener){
+//        this.onLongClickListener = onLongClickListener;
+//    }
+//
+//    public boolean onLongClick(View view){
+//
+//        return true;
+//    }
+//
+//
+//    public interface OnItemClickListener{
+//        void onPositionButtonClick();
+//
+//    }
+
     @Override
     public boolean onTouchEvent(MotionEvent e){
         switch (e.getAction()){
             case MotionEvent.ACTION_DOWN:
                 this.onDotViewPressListener.onDotViewPressed((int)e.getX(), (int)e.getY());
-                if (e.getEventTime() - e.getDownTime() > 500 && dots.findDot((int) e.getX(), (int) e.getY()) != -1){
-                    ///
-                    EditDotFragment.newInstance();
-                    return true;
-                }else {
-                    return true;
-                }
-
+                return true;
+//            case MotionEvent.ACTION_MOVE:
+//                handler.removeCallbacks(mLongPressed);
+//                return super.onTouchEvent(e);
+//            case MotionEvent.ACTION_UP:
+//                handler.removeCallbacks(mLongPressed);
+//                return super.onTouchEvent(e);
         }
         return false;
     }
 
+//    final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener(){
+//        public void onLongPress(MotionEvent e){
+//            Log.e("", "Longpress detected");
+//        }
+//    });
 
+//    final Handler handler = new Handler();
+//    Runnable mLongPressed = new Runnable() {
+//        public void run() {
+//            Log.i("", "Long press!");
+//        }
+//    };
 
     public DotView(Context context) {
         super(context);
@@ -108,6 +108,7 @@ public class DotView extends View{
         super(context, attrs, defStyleAttr);
         paint = new Paint();
     }
+
 
     public void setDots(Dots dots) {
         this.allDot = dots;
