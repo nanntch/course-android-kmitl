@@ -2,4 +2,5 @@
 <resources>
     <item name="activity_main" type="id">activity_main</item>
     <item name="mian" type="id" />
+    <item name="showReceiveData" type="id">showReceiveData</item>
 </resources>

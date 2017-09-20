@@ -6,8 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import kmitl.lab03.natcha58070069.simplemydot.fragment.DotFragment;
+import kmitl.lab03.natcha58070069.simplemydot.fragment.EditDotFragment;
+import kmitl.lab03.natcha58070069.simplemydot.model.Dot;
+import kmitl.lab03.natcha58070069.simplemydot.model.Dots;
 
-public class MainActivity extends AppCompatActivity implements DotFragment.dotFragmentListener {
+//DotFragment.DataPassListener
+public class MainActivity extends AppCompatActivity implements DotFragment.dotFragmentListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements DotFragment.dotFr
     private void initialFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, DotFragment.newInstance())
+                .add(R.id.fragmentContainer, DotFragment.newInstance(MainActivity.this))
                 .commit();
     }
 
@@ -35,9 +39,19 @@ public class MainActivity extends AppCompatActivity implements DotFragment.dotFr
                 .commit();
     }
 
+//    @Override
+//    public void passData(String data) {
+//        EditDotFragment editDotFragment = new EditDotFragment();
+//        Bundle args = new Bundle();
+//        args.putString(EditDotFragment.DATA_RECEIVE, data);
+//        editDotFragment.setArguments(args);
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragmentContainer, editDotFragment)
+//                .commit();
+//    }
+
     @Override
-    public void showAndUpdateB(String value) {
-
+    public void EditDotFragment(Dots dots, Dot dot, int dotPosition) {
+        viewFragment(EditDotFragment.newInstance(dots, dot, dotPosition));
     }
-
 }

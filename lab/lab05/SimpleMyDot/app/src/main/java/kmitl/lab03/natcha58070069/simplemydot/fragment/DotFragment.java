@@ -2,6 +2,7 @@ package kmitl.lab03.natcha58070069.simplemydot.fragment;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,18 +38,15 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
 
     private Dots dots;
     private DotView dotView;
+    private Dot dot;
     private ImageView imageView;
     private final int EXTERNAL_REQUEST_CODE = 2;
     private dotFragmentListener listener;
 
-    public DotFragment() {
-        // Required empty public constructor
-    }
-
-    public static DotFragment newInstance() {
-
-        Bundle args = new Bundle();
+    public static final DotFragment newInstance(dotFragmentListener listener) {
         DotFragment fragment = new DotFragment();
+        fragment.setListener(listener);
+        Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,7 +56,7 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_dot, container, false);
-//        imageView = (ImageView) rootView.findViewById(R.id.imageView);
+        imageView = (ImageView) rootView.findViewById(R.id.imageView);
         dotView = (DotView) rootView.findViewById(R.id.dotView);
         dotView.setOnDotViewPressListener(this);
         dots = new Dots();
@@ -90,6 +89,7 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
         }
     }
 
+    //BUTTON RANDOM
     public void onRandomDot(View view) {
         Random random = new Random();
         //Random locate
@@ -100,6 +100,17 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
         dots.addDot(newDot);
     }
 
+    //BUTTON CLEAR DOT
+    public void onClearDot(View view) {
+        dots.clearAll();
+        dotView.invalidate();
+    }
+
+    //BUTTON UNDO
+    public void btnUndo(View view) {
+        dots.undoDot();
+    }
+
     @Override
     public void onDotsChanged(Dots dots) {
         dotView.setDots(dots); //create meth setDot bec setDot เรื่อย ๆ
@@ -108,16 +119,44 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
 
     @Override
     public void onDotViewPressed(int x, int y) {
-        final int dotPosition = dots.findDot(x, y);
+        final int dotPosition = dots.findDot(x, y); //return index of dot in dots
         final int radius = (int) (30 + (Math.random() * 150));
+
         if (dotPosition == -1) { //if don't have dot on this place
             Dot newDot = new Dot(x, y, radius, new Colors().getColor());
             dots.addDot(newDot);
         } else {
-            dots.editDot(this, dotPosition, radius);
+//            EditDotFragment.newInstance(dots, dot, dotPosition);
+            dots.removeBy(dotPosition);
         }
     }
 
+    @Override
+    public void onDotViewLongPress(final int x, final int y) {
+        final int dotPosition = dots.findDot(x, y); //return index of dot in dots
+
+        if(dotPosition != -1){
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setItems(new CharSequence[]{"Edit"},
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    Dot dot = dots.getAllDot().get(dotPosition);
+                                    EditDotFragment.newInstance(dots, dot, dotPosition);
+                                    listener.EditDotFragment(dots, dot, dotPosition);
+                                    dialog.dismiss();
+                                    break;
+                            }
+                        }
+                    });
+            builder.show();
+        }
+
+    }
+
+    //BUTTON SHARE
     public void btnCapture(View view) {
         //ARK PERMISSION
         if (askPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_REQUEST_CODE) == 0) {
@@ -171,22 +210,13 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
         }
     }
 
-    public void onClearDot(View view) {
-        dots.clearAll();
-        dotView.invalidate();
-    }
-
-
-    public void btnUndo(View view) {
-        dots.undoDot();
-    }
-
     public void setListener(dotFragmentListener listener) {
         this.listener = listener;
     }
 
     public interface dotFragmentListener {
-        void showAndUpdateB(String value);
+        void EditDotFragment(Dots dots, Dot dot, int dotPosition);
     }
+
 
 }
