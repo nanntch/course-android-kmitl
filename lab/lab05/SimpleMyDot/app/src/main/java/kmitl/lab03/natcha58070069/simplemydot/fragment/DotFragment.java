@@ -38,7 +38,7 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
 
     private Dots dots;
     private DotView dotView;
-    private Dot dot;
+//    private Dot dot;
     private ImageView imageView;
     private final int EXTERNAL_REQUEST_CODE = 2;
     private dotFragmentListener listener;
@@ -126,7 +126,6 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
             Dot newDot = new Dot(x, y, radius, new Colors().getColor());
             dots.addDot(newDot);
         } else {
-//            EditDotFragment.newInstance(dots, dot, dotPosition);
             dots.removeBy(dotPosition);
         }
     }
@@ -153,7 +152,6 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
                     });
             builder.show();
         }
-
     }
 
     //BUTTON SHARE
@@ -167,16 +165,13 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
         }
     }
 
-    private int askPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-            //dont have permission
-            ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
-            return 1;
-        } else {
-            //have permission
-            Toast.makeText(getContext(), "Permission is Already Granted", Toast.LENGTH_SHORT).show();
-            return 0;
-        }
+    //INTENT TO APP
+    private void createIntent(Uri uri) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(shareIntent, "Share image"));
     }
 
     //CREATE FILE FOR SAVE PICTURE(SCREENSHOT)
@@ -188,13 +183,16 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
         return Uri.parse(path);
     }
 
-    //INTENT TO APP
-    private void createIntent(Uri uri) {
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.setType("image/*");
-        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(shareIntent, "Share image"));
+    private int askPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+            //dont have permission
+            ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
+            return 1;
+        } else {
+            //have permission
+            Toast.makeText(getContext(), "Permission is Already Granted", Toast.LENGTH_SHORT).show();
+            return 0;
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
@@ -217,6 +215,4 @@ public class DotFragment extends Fragment implements Dots.OnDotsChangeListener, 
     public interface dotFragmentListener {
         void EditDotFragment(Dots dots, Dot dot, int dotPosition);
     }
-
-
 }

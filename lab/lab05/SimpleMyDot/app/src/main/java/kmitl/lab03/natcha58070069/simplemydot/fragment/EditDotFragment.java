@@ -1,13 +1,8 @@
 package kmitl.lab03.natcha58070069.simplemydot.fragment;
 
-
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.Settings;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +18,12 @@ import kmitl.lab03.natcha58070069.simplemydot.model.Dots;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditDotFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
+public class EditDotFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     SeekBar red, green, blue;
-//    ConstraintLayout co;
     private TextView prototype;
 
+    //for putParcel
     private static final String dotString = "dot";
     private static final String dotsString = "dots";
     private static final String dotPositionString = "dotPosition";
@@ -40,7 +35,6 @@ public class EditDotFragment extends Fragment implements SeekBar.OnSeekBarChange
     private EditText centerX;
     private EditText centerY;
     private EditText radius;
-
     private int color;
 
 
@@ -49,6 +43,7 @@ public class EditDotFragment extends Fragment implements SeekBar.OnSeekBarChange
         Bundle args = new Bundle();
         EditDotFragment fragment = new EditDotFragment();
 
+        //put in String
         args.putParcelable(dotsString, dots);
         args.putParcelable(dotString, dot);
         args.putInt(dotPositionString, dotPosition);
@@ -66,21 +61,22 @@ public class EditDotFragment extends Fragment implements SeekBar.OnSeekBarChange
         red = (SeekBar) rootView.findViewById(R.id.seekBar);
         green = (SeekBar) rootView.findViewById(R.id.seekBar2);
         blue = (SeekBar) rootView.findViewById(R.id.seekBar3);
-//        co = (ConstraintLayout) rootView.findViewById(R.id.constrain);
-        prototype = (TextView) rootView.findViewById(R.id.prototype);
+        red.setOnSeekBarChangeListener(this);
+        green.setOnSeekBarChangeListener(this);
+        blue.setOnSeekBarChangeListener(this);
 
+        prototype = (TextView) rootView.findViewById(R.id.prototype);
 
         centerX = (EditText) rootView.findViewById(R.id.putCenterX);
         centerY = (EditText) rootView.findViewById(R.id.putCenterY);
         radius = (EditText) rootView.findViewById(R.id.putRadius);
 
-        Button summit = (Button) rootView.findViewById(R.id.summit);
-        summit.setOnClickListener(this);
+        Button save = (Button) rootView.findViewById(R.id.save);
+        Button cancle = (Button) rootView.findViewById(R.id.cancle);
+        save.setOnClickListener(this);
+        cancle.setOnClickListener(this);
 
-        red.setOnSeekBarChangeListener(this);
-        green.setOnSeekBarChangeListener(this);
-        blue.setOnSeekBarChangeListener(this);
-
+        //get String in class
         dots = getArguments().getParcelable(dotsString);
         dot = getArguments().getParcelable(dotString);
         dotPosition = getArguments().getInt(dotPositionString);
@@ -91,16 +87,13 @@ public class EditDotFragment extends Fragment implements SeekBar.OnSeekBarChange
         red.getProgress();
         green.getProgress();
         blue.getProgress();
-        Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress());
 
-       return rootView;
+        return rootView;
     }
-
 
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//        co.setBackgroundColor(Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress()));
         prototype.setBackgroundColor(Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress()));
         color = Color.rgb(red.getProgress(), green.getProgress(), blue.getProgress());
     }
@@ -118,12 +111,14 @@ public class EditDotFragment extends Fragment implements SeekBar.OnSeekBarChange
     @Override
     public void onClick(View v) {
         id = v.getId();
-        if (id == R.id.summit){
+        if (id == R.id.save) {
             dot.setColor(color);
             dot.setCenterX(Float.parseFloat(String.valueOf(centerX.getText())));
             dot.setCenterY(Float.parseFloat(String.valueOf(centerY.getText())));
             dot.setRadius(Float.parseFloat(String.valueOf(radius.getText())));
             dots.editDotAttr(dotPosition, dot);
+            getActivity().onBackPressed();
+        }else if (id == R.id.cancle){
             getActivity().onBackPressed();
         }
     }

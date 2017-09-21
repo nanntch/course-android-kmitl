@@ -3,7 +3,6 @@ package kmitl.lab03.natcha58070069.simplemydot.model;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Editable;
 
 public class Dot implements Parcelable {
     private float centerX;

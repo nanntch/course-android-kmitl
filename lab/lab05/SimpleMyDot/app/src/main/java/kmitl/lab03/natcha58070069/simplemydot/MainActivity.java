@@ -11,7 +11,7 @@ import kmitl.lab03.natcha58070069.simplemydot.model.Dot;
 import kmitl.lab03.natcha58070069.simplemydot.model.Dots;
 
 //DotFragment.DataPassListener
-public class MainActivity extends AppCompatActivity implements DotFragment.dotFragmentListener{
+public class MainActivity extends AppCompatActivity implements DotFragment.dotFragmentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity implements DotFragment.dotFr
         if (savedInstanceState == null) {
             initialFragment();
         }
-
     }
 
     private void initialFragment() {
@@ -38,17 +37,6 @@ public class MainActivity extends AppCompatActivity implements DotFragment.dotFr
                 .addToBackStack(null)
                 .commit();
     }
-
-//    @Override
-//    public void passData(String data) {
-//        EditDotFragment editDotFragment = new EditDotFragment();
-//        Bundle args = new Bundle();
-//        args.putString(EditDotFragment.DATA_RECEIVE, data);
-//        editDotFragment.setArguments(args);
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragmentContainer, editDotFragment)
-//                .commit();
-//    }
 
     @Override
     public void EditDotFragment(Dots dots, Dot dot, int dotPosition) {

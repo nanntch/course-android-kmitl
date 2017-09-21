@@ -47,7 +47,6 @@ public class DotView extends View {
     public void onTouchType(Context context) {
         gestureDetector = new GestureDetector(this.getContext(), new GestureDetector.SimpleOnGestureListener() {
             public boolean onDown(MotionEvent e) {
-//                onDotViewPressListener.onDotViewPressed((int) e.getX(), (int) e.getY());
                 return true;
             }
 
