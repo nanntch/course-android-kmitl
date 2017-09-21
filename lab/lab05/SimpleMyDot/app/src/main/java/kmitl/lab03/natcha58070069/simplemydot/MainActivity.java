@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements DotFragment.dotFr
     private void viewFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
+                .add(R.id.fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();
     }

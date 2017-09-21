@@ -1,11 +1,14 @@
 package kmitl.lab03.natcha58070069.simplemydot.model;
 
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.Editable;
 
-public class Dot {
+public class Dot implements Parcelable {
     private float centerX;
     private float centerY;
-    private int radius;
+    private float radius;
     private int color;
 
     public Dot(float centerX, float centerY, int radius) {
@@ -39,7 +42,7 @@ public class Dot {
         return radius;
     }
 
-    public void setRadius(int radius) {
+    public void setRadius(float radius) {
         this.radius = radius;
     }
 
@@ -49,5 +52,15 @@ public class Dot {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

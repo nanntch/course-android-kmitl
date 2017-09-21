@@ -17,7 +17,16 @@ import kmitl.lab03.natcha58070069.simplemydot.view.DotView;
  * Created by Nacha on 10-Sep-17.
  */
 
-public class Dots {
+public class Dots implements Parcelable {
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    }
 
     //INTERFACE & LISTENER
     public interface OnDotsChangeListener {
@@ -72,15 +81,20 @@ public class Dots {
         this.listener.onDotsChanged(this);
     }
 
-    public void changeSize(int position, int radius) {
-        allDot.get(position).setRadius(radius);
+    public void editDotAttr(int position,Dot dot){
+        allDot.set(position, dot);
         this.listener.onDotsChanged(this);
     }
 
-    public void changeColor(int position) {
-        allDot.get(position).setColor(new Colors().getColor());
-        this.listener.onDotsChanged(this);
-    }
+//    public void changeSize(int position, int radius) {
+//        allDot.get(position).setRadius(radius);
+//        this.listener.onDotsChanged(this);
+//    }
+//
+//    public void changeColor(int position) {
+//        allDot.get(position).setColor(new Colors().getColor());
+//        this.listener.onDotsChanged(this);
+//    }
 
 //    public void editDot(DotFragment dotFragment, final int position, final int radius) {
 //        AlertDialog.Builder builder = new AlertDialog.Builder(dotFragment.getActivity());
