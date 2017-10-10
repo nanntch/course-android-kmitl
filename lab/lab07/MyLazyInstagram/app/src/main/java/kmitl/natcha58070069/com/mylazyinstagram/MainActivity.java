@@ -15,38 +15,83 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import kmitl.natcha58070069.com.mylazyinstagram.adapter.PostAdapter;
-import kmitl.natcha58070069.com.mylazyinstagram.api.PostModel;
 import kmitl.natcha58070069.com.mylazyinstagram.api.MylazyInstagramApi;
 import kmitl.natcha58070069.com.mylazyinstagram.api.UserProfile;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //check user view (1 = Grid view, 2 = List view)
-    private int mark = 1;
+    private int mark = 1; //mark = for check user view (1 = Grid view, 2 = List view)
+    private String user = "android";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //android , nature , cartoon
-        getUserProfile("nature");
+        getUserProfile(user);
 
+        //LIST VIEW BUTTON
+        ImageView listView = findViewById(R.id.icon_list);
+        listView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mark = 2;
+//                Toast.makeText(getBaseContext(), "LIST", Toast.LENGTH_LONG).show();
+                getUserProfile(user);
+            }
+        });
+
+        //GRID VIEW BUTTON
+        ImageView gridView = findViewById(R.id.icon_grid);
+        gridView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mark = 1;
+//                Toast.makeText(getBaseContext(), "GRID", Toast.LENGTH_LONG).show();
+                getUserProfile(user);
+            }
+        });
+
+        //MORE FUNCTION BUTTON = change account
+        ImageView more = findViewById(R.id.icon_more);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setItems(new CharSequence[]{"android", "nature", "cartoon"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                getUserProfile("android") ;
+                                user = "android";
+                                dialogInterface.dismiss();
+                                break;
+                            case 1:
+                                getUserProfile("nature");
+                                user = "nature";
+                                dialogInterface.dismiss();
+                                break;
+                            case 2:
+                                getUserProfile("cartoon");
+                                user = "cartoon";
+                                dialogInterface.dismiss();
+                                break;
+                        }
+                    }
+                });
+                builder.show();
+            }
+        });
     }
 
     private void getUserProfile(final String name) {
         //Builder Pattern
         OkHttpClient client = new OkHttpClient.Builder().build();
-
-        //ScalarsConverterFactory = get only string value(code is same func as Gson but Scalar)
-//                .addConverterFactory(ScalarsConverterFactory.create())
-
 
         //GsonConverterFactory = change info from JSON to Obj
         Retrofit retrofit = new Retrofit
@@ -59,57 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Factory: New obj by retrofit from Interface LazyInstagramApi
         final MylazyInstagramApi myLazyInstagramApi = retrofit.create(MylazyInstagramApi.class);
 
-        //List View Button
-        ImageView icon_list = findViewById(R.id.icon_list);
-        icon_list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mark = 2;
-                Toast.makeText(getBaseContext(), "LIST", Toast.LENGTH_LONG).show();
-
-                //Connect UserProfile (Call)
-                Call<UserProfile> call = myLazyInstagramApi.getProfile(name);
-                call.enqueue(new retrofit2.Callback<UserProfile>() {
-                    @Override
-                    public void onResponse(retrofit2.Call<UserProfile> call, retrofit2.Response<UserProfile> response) {
-                        if (response.isSuccessful()) {
-                            display(response.body());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserProfile> call, Throwable t) {
-                    }
-                });
-            }
-        });
-
-        //Grid View Button
-        ImageView icon_grid = findViewById(R.id.icon_grid);
-        icon_grid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mark = 1;
-                Toast.makeText(getBaseContext(), "GRID", Toast.LENGTH_LONG).show();
-
-                //Connect UserProfile (Call)
-                Call<UserProfile> call = myLazyInstagramApi.getProfile(name);
-                call.enqueue(new retrofit2.Callback<UserProfile>() {
-                    @Override
-                    public void onResponse(retrofit2.Call<UserProfile> call, retrofit2.Response<UserProfile> response) {
-                        if (response.isSuccessful()) {
-                            display(response.body());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserProfile> call, Throwable t) {
-                    }
-                });
-            }
-        });
-
-        //Connect UserProfile (Call) & default is Grid view
+        //Connect UserProfile (Call)
         Call<UserProfile> call = myLazyInstagramApi.getProfile(name);
         call.enqueue(new retrofit2.Callback<UserProfile>() {
             @Override
@@ -123,38 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onFailure(Call<UserProfile> call, Throwable t) {
             }
         });
-
-        ImageView icon_more = findViewById(R.id.icon_more);
-        icon_more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setItems(new CharSequence[]{"android", "nature", "cartoon"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i){
-                            case 0:
-                                getUserProfile("android");
-                                dialogInterface.dismiss();
-                                break;
-                            case 1:
-                                getUserProfile("nature");
-                                dialogInterface.dismiss();
-                                break;
-                            case 2:
-                                getUserProfile("cartoon");
-                                dialogInterface.dismiss();
-                                break;
-                        }
-                    }
-                });
-                builder.show();
-            }
-        });
-
     }
-
-
 
     @Override
     public void onClick(View view) {
@@ -163,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void display(UserProfile userProfile) {
 
-        //USER PROFILE ZONE
+        //USER PROFILE AREA
         //getObj by .get is GSON != Scarlar
         TextView textUser = findViewById(R.id.textUser);
         textUser.setText("@" + userProfile.getUser());
@@ -178,20 +142,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textFollower.setText("Follower\n" + userProfile.getFollower());
 
         TextView textBio = findViewById(R.id.textBio);
-        textBio.setText("" + userProfile.getBio());
+        textBio.setText(userProfile.getBio().toString());
 
+        //How to call image from GSON to ImageView
         ImageView imageUser = findViewById(R.id.imageProfile);
         Glide.with(MainActivity.this).load(userProfile.getUrlProfile()).into(imageUser);
 
-        //POST IMAGE ZONE
+        //POST IMAGE AREA
         RecyclerView list = findViewById(R.id.list);
         if (mark == 2) {
             list.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         } else {
             list.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
         }
+
+        //POST ADAPTER (SET DATA)
         PostAdapter adapter = new PostAdapter(MainActivity.this);
-        adapter.setData(userProfile.getPosts());
+        adapter.setData(userProfile.getPosts(), mark);
         list.setAdapter(adapter);
     }
 

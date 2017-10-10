@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:background="#eff0f1"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginTop="1dp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="17dp"
+        android:background="@android:drawable/screen_background_light_transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
+        app:layout_constraintLeft_toLeftOf="@+id/image"
+        app:layout_constraintRight_toRightOf="@+id/image"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="-17dp" />
+
+    <ImageView
+        android:id="@+id/pic_like"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="116dp"
+        android:layout_marginLeft="117dp"
+        android:layout_marginRight="116dp"
+        android:layout_marginStart="117dp"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/pic_comment"
+        app:layout_constraintTop_toTopOf="@+id/textLike"
+        app:srcCompat="@drawable/pic_like"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <ImageView
+        android:id="@+id/pic_comment"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
+        app:layout_constraintRight_toLeftOf="@+id/textComment"
+        app:layout_constraintTop_toTopOf="@+id/textView"
+        app:srcCompat="@drawable/pic_comment"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/textComment"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginEnd="132dp"
+        android:text="11"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/textView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView"
+        tools:layout_constraintBaseline_creator="1"
+        android:layout_marginRight="132dp" />
+
+    <TextView
+        android:id="@+id/textLike"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp"
+        android:text="11"
+        app:layout_constraintBottom_toBottomOf="@+id/pic_comment"
+        app:layout_constraintLeft_toRightOf="@+id/pic_like"
+        app:layout_constraintTop_toTopOf="@+id/pic_comment"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+</android.support.constraint.ConstraintLayout>

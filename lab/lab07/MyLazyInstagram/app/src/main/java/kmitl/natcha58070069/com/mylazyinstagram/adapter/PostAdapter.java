@@ -10,42 +10,35 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import kmitl.natcha58070069.com.mylazyinstagram.MainActivity;
 import kmitl.natcha58070069.com.mylazyinstagram.R;
 import kmitl.natcha58070069.com.mylazyinstagram.api.PostModel;
-
-import static kmitl.natcha58070069.com.mylazyinstagram.R.id.textComment;
-import static kmitl.natcha58070069.com.mylazyinstagram.R.id.textLike;
 
 /**
  * Created by Nacha on 08-Oct-17.
  */
 
-//holder item ไว้ โล่งๆ รอรูปมา
-class Holder extends RecyclerView.ViewHolder{
-
+//Holder item is empty wait for receive image
+class Holder extends RecyclerView.ViewHolder {
 
     public ImageView image;
     public TextView textLike;
     public TextView textComment;
 
-
-    public Holder(View itemView){
+    public Holder(View itemView) {
         super(itemView);
         image = itemView.findViewById(R.id.image);
         textLike = itemView.findViewById(R.id.textLike);
         textComment = itemView.findViewById(R.id.textComment);
-
     }
 }
 
-//มีข้อมูลอะไร
-public class PostAdapter extends RecyclerView.Adapter<Holder>{
+//Data for put in Holder
+public class PostAdapter extends RecyclerView.Adapter<Holder> {
+    //for check user view (1 = Grid view, 2 = List view)
+    private int mark = 1;
 
     private Context context;
     private List<PostModel> data;
@@ -55,31 +48,43 @@ public class PostAdapter extends RecyclerView.Adapter<Holder>{
         data = new ArrayList<>();
     }
 
-    public void setData(List<PostModel> data){
+    public void setData(List<PostModel> data, int mark) {
         this.data = data;
+        this.mark = mark;
     }
+
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //สร้างอิมเมจขึ้นมา รอใส่ใน Holder
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, null);
-        Holder holder = new Holder(itemView);
-        return holder;
+        //Create image waiting for put in Holder
+
+        if (mark == 2) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_list, null);
+            Holder holder = new Holder(itemView);
+            return holder;
+        } else {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item, null);
+            Holder holder = new Holder(itemView);
+            return holder;
+        }
     }
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
+
         String imageUrl = data.get(position).getUrl();
         Glide.with(context).load(imageUrl).into(holder.image);
         //load image from URL and show
 
         TextView textLike = holder.textLike;
-        textLike.setText("" + data.get(position).getLike());
+        textLike.setText(data.get(position).getLike().toString());
 
         TextView textComment = holder.textComment;
-        textComment.setText("" + data.get(position).getComment());
+        textComment.setText(data.get(position).getComment().toString());
     }
 
-    //เรามีข้อมูลเท่าไหร่
+    //How much data?
     @Override
     public int getItemCount() {
         return data.size();
