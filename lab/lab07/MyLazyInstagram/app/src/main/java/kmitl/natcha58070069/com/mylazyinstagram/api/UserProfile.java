@@ -1,11 +1,6 @@
 package kmitl.natcha58070069.com.mylazyinstagram.api;
 
-import android.widget.TextView;
-
 import java.util.List;
-
-import kmitl.natcha58070069.com.mylazyinstagram.R;
-import kmitl.natcha58070069.com.mylazyinstagram.adapter.PostModel;
 
 /**
  * Created by Nacha on 07-Oct-17.

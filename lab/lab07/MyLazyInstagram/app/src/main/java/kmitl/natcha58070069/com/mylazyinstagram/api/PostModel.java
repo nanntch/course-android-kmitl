@@ -1,4 +1,4 @@
-package kmitl.natcha58070069.com.mylazyinstagram.adapter;
+package kmitl.natcha58070069.com.mylazyinstagram.api;
 
 /**
  * Created by Nacha on 09-Oct-17.
