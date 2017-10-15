@@ -1,4 +1,4 @@
-package kmitl.natcha58070069.com.mylazyinstagram.api;
+package kmitl.natcha58070069.com.mylazyinstagram.model;
 
 import java.util.List;
 

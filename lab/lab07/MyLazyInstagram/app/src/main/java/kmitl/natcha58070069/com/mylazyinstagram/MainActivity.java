@@ -10,13 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import kmitl.natcha58070069.com.mylazyinstagram.adapter.PostAdapter;
 import kmitl.natcha58070069.com.mylazyinstagram.api.MylazyInstagramApi;
-import kmitl.natcha58070069.com.mylazyinstagram.api.UserProfile;
+import kmitl.natcha58070069.com.mylazyinstagram.model.UserProfile;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -62,12 +61,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Accounts");
                 builder.setItems(new CharSequence[]{"android", "nature", "cartoon"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         switch (i) {
                             case 0:
-                                getUserProfile("android") ;
+                                getUserProfile("android");
                                 user = "android";
                                 dialogInterface.dismiss();
                                 break;
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //How to call image from GSON to ImageView
         ImageView imageUser = findViewById(R.id.imageProfile);
-        Glide.with(MainActivity.this).load(userProfile.getUrlProfile()).into(imageUser);
+        Glide.with(MainActivity.this).load(userProfile.getUrlProfile()).into(imageUser) ;
 
         //POST IMAGE AREA
         RecyclerView list = findViewById(R.id.list);

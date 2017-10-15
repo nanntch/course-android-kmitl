@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kmitl.natcha58070069.com.mylazyinstagram.R;
-import kmitl.natcha58070069.com.mylazyinstagram.api.PostModel;
+import kmitl.natcha58070069.com.mylazyinstagram.model.PostModel;
 
 /**
  * Created by Nacha on 08-Oct-17.
@@ -56,7 +56,6 @@ public class PostAdapter extends RecyclerView.Adapter<Holder> {
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Create image waiting for put in Holder
-
         if (mark == 2) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_list, null);

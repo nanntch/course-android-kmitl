@@ -1,5 +1,6 @@
 package kmitl.natcha58070069.com.mylazyinstagram.api;
 
+import kmitl.natcha58070069.com.mylazyinstagram.model.UserProfile;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
