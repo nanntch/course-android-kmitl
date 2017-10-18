@@ -93,7 +93,7 @@
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="30dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textUser"
@@ -108,7 +108,9 @@
             android:layout_weight="1"
             android:background="@color/colorAccent"
             android:onClick="icon_grid"
-            app:srcCompat="@drawable/pic_grid1"/>
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            app:srcCompat="@drawable/pic_grid1" />
 
         <ImageView
             android:id="@+id/icon_list"
@@ -117,6 +119,8 @@
             android:layout_weight="1"
             android:background="@color/colorAccent"
             android:onClick="icon_list"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
             app:srcCompat="@drawable/pic_list2" />
 
         <ImageView
