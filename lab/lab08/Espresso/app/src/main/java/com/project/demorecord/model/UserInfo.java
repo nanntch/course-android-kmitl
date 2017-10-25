@@ -1,4 +1,4 @@
-package com.project.demorecord;
+package com.project.demorecord.model;
 
 public class UserInfo {
     String name;

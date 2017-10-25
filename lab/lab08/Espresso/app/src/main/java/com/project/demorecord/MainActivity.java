@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
 
+import com.project.demorecord.controller.CommonSharePreference;
+import com.project.demorecord.model.UserInfo;
+import com.project.demorecord.model.UserInfoList;
+
 import java.util.ArrayList;
 import java.util.List;
 

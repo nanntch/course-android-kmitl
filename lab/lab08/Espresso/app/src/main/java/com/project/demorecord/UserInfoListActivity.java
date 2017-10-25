@@ -1,6 +1,5 @@
 package com.project.demorecord;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.project.demorecord.adapter.MyAdapter;
+import com.project.demorecord.controller.CommonSharePreference;
+import com.project.demorecord.model.UserInfo;
+import com.project.demorecord.model.UserInfoList;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class UserInfoListActivity extends AppCompatActivity {
 
@@ -28,7 +31,6 @@ public class UserInfoListActivity extends AppCompatActivity {
     public TextView textNotFound;
 
     public Button buttonClearList;
-
 
     private MyAdapter adapter;
     private CommonSharePreference preference;
@@ -56,7 +58,7 @@ public class UserInfoListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 suggestSearchList.clearList(suggestSearchList.getUserInfoList());
-                preference.save(UserInfoListActivity.EXTTRA_LIST,suggestSearchList);
+                preference.save(UserInfoListActivity.EXTTRA_LIST, suggestSearchList);
                 displaySuggestsList(new ArrayList<UserInfo>());
             }
         });
