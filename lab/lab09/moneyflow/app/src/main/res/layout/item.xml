@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="#f1f7e8"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:id="@+id/textType"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:layout_gravity="center"
+            android:text="@string/type"
+            android:textColor="#030303"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textOrder"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="@string/order"
+            android:textColor="#030303"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textAmount"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:paddingRight="8dp"
+            android:text="@string/amount"
+            android:textColor="#030303"
+            android:textSize="22sp" />
+    </LinearLayout>
+</LinearLayout>
